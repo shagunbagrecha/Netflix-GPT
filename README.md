@@ -75,12 +75,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Create React App
 - Configured TailwindCSS
 - Header
+- Routing of App
 - Login form
 - Sign Up form
+- Form Validation
+- Use Ref Hook
+- Authentication
+- Firebase Setup
+- Deploying the app to production
+- Created SignUp User account
+- Implemented SignIn User Logic 
+- Created our Redux Store with User Slice
+- Implemented Sign Out Feature
+- Update Profile API call
+
+
 
 # Features
     - Login/Sign Up
-        - SignIn/SignUP Form
+        - SignIn/SignUp Form
         - redirect to Browse Page
     - Browse (afetr authentication)
         - Header
@@ -92,5 +105,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
     - NetflixGPT
         -SearchBar
         -Movie Suggestions
+
+
+# hooks - 
+ - UseRef hook lets you reference a value that's not needed for rendering!
+
 
 

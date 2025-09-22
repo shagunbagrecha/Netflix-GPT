@@ -1,11 +1,102 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { validateData } from "../utils/validation";
 import Header from "./Header";
-
+import { auth } from "../utils/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errormessage, setErrormessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
+
   const toggleSignInForm = () => {
     // Logic to toggle between Sign In and Sign Up forms
     setIsSignInForm(!isSignInForm);
+  };
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    // Validate the form Data
+    validateData(email.current.value, password.current.value);
+    const message = validateData(email.current.value, password.current.value);
+    setErrormessage(message);
+
+    if (message) return;
+
+    //Sign In/ Sign Up Logic here
+    if (!isSignInForm) {
+      //Sign Up Logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL:
+              "https://avatars.githubusercontent.com/u/54242232?s=400&u=80abcf9937fec029a5df7a29e176c0120201554a&v=4",
+          })
+            .then(() => {
+              navigate("/browse");
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+              // Profile updated!
+              // ...
+            })
+            .catch((error) => {
+              setErrormessage(error.message);
+              // An error occurred
+              // ...
+            });
+
+          console.log(user);
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrormessage(errorCode + "-" + errorMessage);
+          // ..
+        });
+    } else {
+      // Sign In Logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/browse");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrormessage(errorCode + "-" + errorMessage);
+        });
+    }
+
+    // Proceed with form submission if no error
   };
   return (
     <div>
@@ -20,6 +111,7 @@ const Login = () => {
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
         <input
+          ref={name}
           type="text"
           placeholder="Full Name"
           className={`p-4 my-2 w-full rounded lg bg-transparent border ${
@@ -27,12 +119,14 @@ const Login = () => {
           }`}
         ></input>
         <input
+          ref={email}
           type="email"
           placeholder="Email or mobile number"
           required
           className="p-4 my-2 w-full rounded lg bg-transparent border"
         />
         <input
+          ref={password}
           type="password"
           placeholder="Password"
           required
@@ -41,9 +135,11 @@ const Login = () => {
         <button
           type="submit"
           className="outline-none p-3 my-4 bg-red-600 text-white w-full rounded lg z-10"
+          onClick={handleButtonClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
+        <p className="text-yellow-600">{errormessage}</p>
         <p className="py-4">
           {isSignInForm ? "New to Netflix? " : "Already a User? "}
           <span

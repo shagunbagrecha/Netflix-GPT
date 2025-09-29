@@ -1,32 +1,48 @@
-import React from "react";
-import { getAuth, signOut } from "firebase/auth";
+import React, {useEffect} from "react";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
+import { LOGO } from "../utils/constants";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const handleSignOut = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
-        navigate("/");
-        // Sign-out successful.
       })
       .catch((error) => {
         navigate("/error");
-        // An error happened.
       });
   };
+
+    useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+        navigate("/browse");
+      } else {
+        dispatch(removeUser());
+        navigate("/");
+      }
+    });
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
   return (
     <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black/80 z-10 flex">
       <img
-        className="w-44"
-        src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production_2025-08-26/consent/87b6a5c0-0104-4e96-a291-092c11350111/0198e689-2b10-79d7-bd01-e93db54ccc2d/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
+        className="w-44 mt-6"
+        src={LOGO}
         alt="Logo"
       />
       {user && (
-        <div className="flex justify-between items-center gap-4 ml-auto text-white">
+        <div className="flex justify-between items-center gap-4 ml-auto mt-4 text-white">
           <img alt="user-icon" className="w-10 rounded" src={user?.photoURL} />
           <button
             onClick={handleSignOut}

@@ -103,6 +103,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Embedded the youtube video and make it autoplay and mute
 - main container tailwind styling
 - Build Secondary Component
+- Build Movie List && Movie Card
+- Found out TMDB Image CDN URL
+- usePopular Movies & Trending Movies & Upcoming Movies - Custom Hook
+- GPT search feature
+- Created GPT Search Bar
+- Multi language feature in the app (Dynamic) 
+
 
 # Features
     - Login/Sign Up

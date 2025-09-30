@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { USER_AVATAR } from "../utils/constants";
+import { BACKDROP, USER_AVATAR } from "../utils/constants";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errormessage, setErrormessage] = useState(null);
@@ -91,7 +91,7 @@ const Login = () => {
       <Header />
       <img
         className="absolute"
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/c95abc7a-8124-4630-bb7a-3b160bdc6de3/web/DE-en-20250915-TRIFECTA-perspective_3b5a5cc2-80cb-4c14-b36b-f0ea8afce9a1_small.jpg"
+        src={BACKDROP}
         alt="Background"
       />
       <form className="absolute p-12 bg-black/80 w-1/4 my-36 mx-auto left-0 right-0 text-white rounded-lg">

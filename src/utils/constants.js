@@ -8,6 +8,9 @@ export const LOGO =
 export const USER_AVATAR =
   "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
 
+export const BACKDROP =
+  "https://assets.nflxext.com/ffe/siteui/vlv3/c95abc7a-8124-4630-bb7a-3b160bdc6de3/web/DE-en-20250915-TRIFECTA-perspective_3b5a5cc2-80cb-4c14-b36b-f0ea8afce9a1_small.jpg";
+
 export const API_OPTIONS = {
   method: "GET",
   headers: {
@@ -18,3 +21,9 @@ export const API_OPTIONS = {
 };
 
 export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w780";
+
+export const SUPPORTED_LANGUAGES = [
+  { id: "en", name: "English", flag: "🇬🇧" },
+  { id: "de", name: "German", flag: "🇩🇪" },
+  { id: "fr", name: "French", flag: "🇫🇷" },
+];

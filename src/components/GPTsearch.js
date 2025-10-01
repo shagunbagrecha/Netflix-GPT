@@ -1,20 +1,24 @@
-import React from 'react'
-import GPTsearchBar from './GPTsearchBar'
-import GPTmovieSuggestions from './GPTmovieSuggestions'
-import { BACKDROP } from '../utils/constants'
+import { useEffect } from "react";
+import GPTsearchBar from "./GPTsearchBar";
+import GPTmovieSuggestions from "./GPTmovieSuggestions";
+import { BACKDROP } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { clearGPTResults } from "../utils/GPTslice";
 
 const GPTsearch = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearGPTResults());
+  }, [dispatch]);
   return (
     <div>
-       <img
-        className="absolute -z-10"
-        src={BACKDROP}
-        alt="Background"
-      />
+      <img className="-z-10 fixed" src={BACKDROP} alt="Background" />
       <GPTsearchBar />
-      <GPTmovieSuggestions />
+      <div>
+        <GPTmovieSuggestions />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default GPTsearch
+export default GPTsearch;

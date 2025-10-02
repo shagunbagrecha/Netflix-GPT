@@ -109,6 +109,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - GPT search feature
 - Created GPT Search Bar
 - Multi language feature in the app (Dynamic) 
+- Get Open AI API key
+- GPT search API call
+- Fetched GPT movie Suggestions from TMDB
+- GPT Slice, populated data there
+- Reused movie list componnet to make movie recommendation container
+- Memoization
+- created .env file and added to gitignore 
+- made the website responsive
 
 
 # Features

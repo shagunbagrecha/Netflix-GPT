@@ -11,13 +11,15 @@ const GPTsearch = () => {
     dispatch(clearGPTResults());
   }, [dispatch]);
   return (
-    <div>
-      <img className="-z-10 fixed" src={BACKDROP} alt="Background" />
-      <GPTsearchBar />
+    <>
+      <div className="-z-10 fixed inset-0">
+        <img className="h-full w-full object-cover" src={BACKDROP} alt="Background" />
+      </div>
       <div>
+        <GPTsearchBar />
         <GPTmovieSuggestions />
       </div>
-    </div>
+    </>
   );
 };
 

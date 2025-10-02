@@ -57,7 +57,6 @@ const Login = () => {
             })
             .catch((error) => {
               setErrormessage(error.message);
-
             });
         })
         .catch((error) => {
@@ -89,12 +88,17 @@ const Login = () => {
   return (
     <div>
       <Header />
-      <img
-        className="absolute"
-        src={BACKDROP}
-        alt="Background"
-      />
-      <form className="absolute p-12 bg-black/80 w-1/4 my-36 mx-auto left-0 right-0 text-white rounded-lg">
+      <div>
+        <img
+          className="absolute object-cover w-full h-full"
+          src={BACKDROP}
+          alt="Background"
+        />
+      </div>
+      <form
+        onSubmit={(e) => e.preventDefault}
+        className="absolute p-12 bg-black/80 w-[90%] md:w-1/4 my-48 md:my-36 mx-auto left-0 right-0 text-white rounded-lg"
+      >
         <h1 className="text-3xl font-bold py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>

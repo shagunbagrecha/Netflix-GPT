@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="[https://github.com/.../assets/...gif](https://github.com/user-attachments/assets/43bb48f2-181a-4445-ae79-57284d016d7d)" alt="Demo" width="800" />
-</p>
+![1005](https://github.com/user-attachments/assets/9f60ce91-5630-46a9-afae-4bfc983c2e8a)
+
 
 # Getting Started with Create React App
 

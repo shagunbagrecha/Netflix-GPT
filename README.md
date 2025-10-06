@@ -1,5 +1,4 @@
-![1005](https://github.com/user-attachments/assets/9f60ce91-5630-46a9-afae-4bfc983c2e8a)
-
+<img src="https://github.com/user-attachments/assets/9f60ce91-5630-46a9-afae-4bfc983c2e8a" width="100%" height="auto" />
 
 # Getting Started with Create React App
 

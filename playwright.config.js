@@ -12,12 +12,6 @@ export default defineConfig({
     video: 'retain-on-failure',
     screenshot: 'only-on-failure'
   },
-  webServer: {
-    command: 'npm start',
-    url: 'http://localhost:3000',
-    timeout: 120000,
-    reuseExistingServer: true
-  },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } }
   ]

@@ -7,6 +7,8 @@ pool:
   name: Default   # This makes the pipeline run on your Mac agent
 
 steps:
+  - checkout: self
+
   - task: NodeTool@0
     inputs:
       versionSpec: '18.x'
@@ -15,22 +17,29 @@ steps:
   - script: |
       npm ci
       npx playwright install --with-deps
+    displayName: "Install dependencies + Playwright"
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+  - script: |
+      npm run build
+      nohup npm start > server.log 2>&1 &
+      sleep 8
+    displayName: "Start Web App"
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+  - script: |
       npx playwright test
     displayName: "Run Playwright Tests"
+    workingDirectory: $(System.DefaultWorkingDirectory)
 
-  # Publish JUnit Test Results to Azure DevOps Test Tab
   - task: PublishTestResults@2
-    displayName: "Publish JUnit Test Results"
     inputs:
-      testResultsFiles: '**/test-results/*.xml'
+      testResultsFiles: '**/junit-report.xml'
       testRunTitle: 'Playwright Tests'
     condition: always()
 
-  # Publish HTML Report as Artifact
   - task: PublishBuildArtifacts@1
-    displayName: "Publish Playwright HTML Report"
     inputs:
       pathToPublish: 'playwright-report'
       artifactName: 'PlaywrightReport'
-      publishLocation: 'Container'
     condition: succeededOrFailed()

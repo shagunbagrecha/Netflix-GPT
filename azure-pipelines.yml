@@ -7,18 +7,28 @@ pool:
   name: Default   # your self-hosted Mac agent
 
 steps:
+  # Ensure repository code is actually checked out
+  - checkout: self
+
   - task: NodeTool@0
     inputs:
       versionSpec: '18.x'
     displayName: "Install Node.js"
 
   - script: |
+      echo "Installing project dependencies..."
       npm ci
+
+      echo "Installing Playwright browsers..."
       npx playwright install --with-deps
-      npx playwright test
+    displayName: "Install Dependencies + Playwright"
+
+  - script: |
+      echo "Starting Web Server & Running Playwright Tests..."
+      npx playwright test --reporter=junit --output=test-results
     displayName: "Run Playwright Tests"
 
-  # Publish JUnit Test Results to Azure DevOps Test Tab
+  # Publish JUnit XML report to Azure DevOps Tests Tab
   - task: PublishTestResults@2
     displayName: "Publish JUnit Test Results"
     inputs:
@@ -27,7 +37,7 @@ steps:
       testRunTitle: "Playwright Tests"
     condition: succeededOrFailed()
 
-  # Publish HTML Report as Artifact
+  # Publish HTML Report as an Artifact
   - task: PublishBuildArtifacts@1
     displayName: "Publish Playwright HTML Report"
     inputs:

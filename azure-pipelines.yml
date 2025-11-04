@@ -16,8 +16,7 @@ steps:
     displayName: "Install Node.js"
 
   - script: |
-      echo "Working directory:"
-      pwd
+      echo "Installing dependencies in: $(pwd)"
       ls -al
       npm ci
       npx playwright install --with-deps
@@ -25,6 +24,7 @@ steps:
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - script: |
+      echo "Building and starting the web app..."
       npm run build
       nohup npm start > server.log 2>&1 &
       sleep 10
@@ -32,18 +32,21 @@ steps:
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - script: |
+      echo "Running Playwright tests..."
       npx playwright test --reporter=html,junit
     displayName: "Run Playwright Tests"
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - task: PublishTestResults@2
+    displayName: "Publish JUnit Test Results"
     inputs:
-      testResultsFiles: 'junit-report.xml'
+      testResultsFiles: '**/junit-report.xml'
       mergeTestResults: true
       testRunTitle: "Playwright Tests"
     condition: succeededOrFailed()
 
   - task: PublishBuildArtifacts@1
+    displayName: "Publish Playwright HTML Report"
     inputs:
       pathToPublish: 'playwright-report'
       artifactName: 'PlaywrightReport'

@@ -20,7 +20,7 @@ steps:
     displayName: "Install Dependencies + Playwright"
 
   - script: |
-      npx playwright test --reporter=html,junit=junit-report.xml
+      npx playwright test 
     displayName: "Run Playwright Tests"
 
   # Publish JUnit XML test results

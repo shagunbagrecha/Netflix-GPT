@@ -1,48 +1,31 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default   # This makes the pipeline run on your Mac agent
 
 steps:
-- checkout: self
-  fetchDepth: 0
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+  - script: |
+      npm ci
+      npx playwright install --with-deps
+      npx playwright test
+    displayName: 'Install and Run Playwright Tests'
 
-- script: npm ci
-  displayName: 'Install dependencies'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results/*.xml'
+      testRunTitle: 'Playwright Tests'
+    condition: always()
 
-- script: npx playwright install --with-deps
-  displayName: 'Install Playwright browsers'
-
-- script: npm run build
-  displayName: 'Build the application'
-
-# Start the web server in background
-- script: |
-    npm start &
-    sleep 10
-  displayName: 'Start web server'
-
-# Run Playwright tests
-- script: npx playwright test --reporter=junit,html
-  displayName: 'Run Playwright tests'
-
-# Publish Playwright JUnit test result for Azure test summary
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/results.xml'
-    testRunTitle: 'Playwright E2E Tests'
-  condition: succeededOrFailed()
-
-# Publish HTML test report & traces as build artifacts
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: 'playwright-report'
-    artifactName: 'Playwright HTML Report'
-    publishLocation: 'Container'
-  condition: succeededOrFailed()
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'playwright-report'
+      artifactName: 'PlaywrightReport'
+    condition: always()

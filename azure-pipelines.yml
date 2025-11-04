@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
       - main
+      - feature/*
 
 pool:
   name: Default   # This makes the pipeline run on your Mac agent
@@ -15,31 +16,38 @@ steps:
     displayName: "Install Node.js"
 
   - script: |
+      echo "Installing dependencies in: $(pwd)"
+      ls -al
       npm ci
       npx playwright install --with-deps
     displayName: "Install dependencies + Playwright"
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - script: |
+      echo "Building and starting the web app..."
       npm run build
       nohup npm start > server.log 2>&1 &
-      sleep 8
+      sleep 10
     displayName: "Start Web App"
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - script: |
-      npx playwright test
+      echo "Running Playwright tests..."
+      npx playwright test --reporter=html,junit
     displayName: "Run Playwright Tests"
     workingDirectory: $(System.DefaultWorkingDirectory)
 
   - task: PublishTestResults@2
+    displayName: "Publish JUnit Test Results"
     inputs:
       testResultsFiles: '**/junit-report.xml'
       testRunTitle: 'Playwright Tests'
     condition: always()
 
   - task: PublishBuildArtifacts@1
+    displayName: "Publish Playwright HTML Report"
     inputs:
       pathToPublish: 'playwright-report'
       artifactName: 'PlaywrightReport'
+      publishLocation: 'Container'
     condition: succeededOrFailed()

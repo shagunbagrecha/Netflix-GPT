@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: Default   # your Mac self-hosted agent
+  name: Default   
 
 steps:
   - checkout: self
@@ -32,7 +32,7 @@ steps:
 
   - script: |
       echo "Running Playwright tests..."
-      npx playwright test --reporter=html,junit
+      npx playwright test 
     displayName: "Run Playwright Tests"
     workingDirectory: $(System.DefaultWorkingDirectory)
 
